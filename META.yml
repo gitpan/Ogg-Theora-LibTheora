@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Ogg-Theora-LibTheora
-version:            0.02
+version:            0.03
 abstract:           XS Interface for calling Theora Video Codec functions in Perl.
 author:
     - Vigith Maurice <vigith@cpan.org>
