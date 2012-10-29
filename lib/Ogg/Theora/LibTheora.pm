@@ -115,6 +115,9 @@ our %EXPORT_TAGS = ( 'all' => [ qw
     get_th_comment
     set_th_info
     rgb_th_encode_ycbcr_in
+    get_th_ycbcr_buffer_info
+    get_th_ycbcr_buffer_data
+    get_th_ycbcr_buffer_ptr
  ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
@@ -185,7 +188,7 @@ our @EXPORT = qw(
     TH_RATECTL_DROP_FRAMES
 );
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -994,6 +997,39 @@ Converts a rgb to ycbcr buffer. (this is not an optimized code)
   th_ycbcr_buffer
 
 
+=head2 get_th_ycbcr_buffer_info
+
+Returns an arrayref of hashrefs containing width, height, stride
+and data_pointer for each plane (issue#1)
+
+-Input:
+  th_ycbcr_buffer
+
+-Output:
+  arrayref
+
+=head2 get_th_ycbcr_buffer_ptr
+
+Returns an data pointer for specified plane index (0 - Y, 1 - Cb, 2 - Cr)
+
+-Input:
+  th_ycbcr_buffer
+  index
+
+-Output:
+  pointer
+
+=head2 get_th_ycbcr_buffer_data
+
+Returns an data for specified plane index (0 - Y, 1 - Cb, 2 - Cr)
+
+-Input:
+  th_ycbcr_buffer
+  index
+
+-Output:
+  string - use unpack to get numbers
+
 =head1 CAVEATS
 
 This Modules expects the Theora file to be contained in an Ogg container (which true for most of the theora videos
@@ -1008,13 +1044,15 @@ Ogg::LibOgg, L<Ogg::LibOgg>
 
 Theora Documentation, L<http://www.theora.org/doc/libtheora-1.0/>
 
+You can find the code for this module and few examples at L<https://github.com/vigith/Ogg-Theora-LibTheora>
+
 =head1 AUTHOR
 
 Vigith Maurice, E<lt>vigith@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2011 by Vigith Maurice, L<www.vigith.com> E<lt>vigith@yahoo-inc.comE<gt>
+Copyright (C) 2011,2012 by Vigith Maurice, L<www.vigith.com> E<lt>vigith@cpan.comE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.9 or,

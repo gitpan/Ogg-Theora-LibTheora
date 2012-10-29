@@ -1,4 +1,4 @@
-Ogg-Theora-LibTheora version 0.03
+Ogg-Theora-LibTheora version 0.04
 =================================
 
 Perl Module to give access to libtheora functions.
@@ -37,7 +37,7 @@ Not Sure, never tested or tried :-)
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2011 by Vigith Maurice (vigith@cpan.org, www.vigith.com)
+Copyright (C) 2011-2012 by Vigith Maurice (vigith@cpan.org, www.vigith.com)
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.9 or,

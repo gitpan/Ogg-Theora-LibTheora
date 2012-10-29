@@ -1075,7 +1075,7 @@ LibTheora_rgb_th_encode_ycbcr_in(_enc, rgb, w, h)
     int	 		w
     int 		h
   PREINIT:
-      int c_out;
+    int c_out;
     int size2;
     unsigned int address;
     char *data;
@@ -1177,5 +1177,97 @@ LibTheora_rgb_th_encode_ycbcr_in(_enc, rgb, w, h)
       }		
     }
     RETVAL = th_encode_ycbcr_in(_enc, ycbcr);
+    free(ycbcr[0].data);
+    free(ycbcr[1].data);
+    free(ycbcr[2].data);
+  OUTPUT:
+    RETVAL
+
+
+=head2 get_th_ycbcr_buffer_info
+
+Returns an arrayref of hashrefs containing width, height, stride
+and data_pointer for each plane (issue#1)
+
+-Input:
+  th_ycbcr_buffer
+
+-Output:
+  arrayref
+
+=cut
+SV *
+LibTheora_get_th_ycbcr_buffer_info(_ycbcr)
+    th_ycbcr_buffer *	_ycbcr;
+  PREINIT:
+    AV * ycbcr_info;
+    int i = 0;
+    th_ycbcr_buffer buffer;
+  INIT:
+    HV * ycbcr;
+    ycbcr_info = (AV *)sv_2mortal((SV *)newAV()); 
+  CODE:
+    memcpy(buffer,_ycbcr, sizeof(buffer));
+    for (i=0; i<3; i++) {
+      ycbcr = (HV *)sv_2mortal((SV *)newHV());
+      hv_store(ycbcr, "height", strlen("height"), newSVuv(buffer[i].height), 0);
+      hv_store(ycbcr, "width", strlen("width"), newSVuv(buffer[i].width), 0);
+      hv_store(ycbcr, "stride", strlen("stride"), newSVuv(buffer[i].stride), 0);
+      hv_store(ycbcr, "data", strlen("data"), newSVuv((int)buffer[i].data), 0);
+
+      // ycbcr is a local variable
+      av_push(ycbcr_info, newRV((SV *)ycbcr));
+    }
+
+    /* returning a reference */
+    RETVAL = newRV((SV *)ycbcr_info);
+
+  OUTPUT:
+    RETVAL
+
+=head2 get_th_ycbcr_buffer_ptr
+
+Returns an data pointer for specified plane index (0 - Y, 1 - Cb, 2 - Cr)
+
+-Input:
+  th_ycbcr_buffer
+  index
+
+-Output:
+  pointer
+
+=cut
+
+void *
+LibTheora_get_th_ycbcr_buffer_ptr(_ycbcr, i)
+    th_ycbcr_buffer *	_ycbcr;
+    int i;
+  CODE:
+    RETVAL = (*_ycbcr)[i].data;
+  OUTPUT:
+    RETVAL
+
+=head2 get_th_ycbcr_buffer_data
+
+Returns an data for specified plane index (0 - Y, 1 - Cb, 2 - Cr)
+
+-Input:
+  th_ycbcr_buffer
+  index
+
+-Output:
+  string
+
+=cut
+
+SV *
+LibTheora_get_th_ycbcr_buffer_data(_ycbcr, i)
+    th_ycbcr_buffer *	_ycbcr;
+    int i;
+  PREINIT:
+    th_ycbcr_buffer buffer;
+  CODE:
+    memcpy(buffer, _ycbcr, sizeof(buffer));
+    RETVAL = newSVpv(buffer[i].data, buffer[i].height * buffer[i].stride);
   OUTPUT:
     RETVAL
